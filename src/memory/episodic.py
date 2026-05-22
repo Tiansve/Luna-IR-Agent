@@ -125,6 +125,10 @@ class EpisodicStore:
         return [e for e in self.episodes if not e.reflected]
 
     def _ensure_matrix(self) -> np.ndarray:
+        # Invalidate the cache if the embedding backend has switched dims
+        # (e.g. remote endpoint was disabled mid-run).
+        if self._matrix is not None and self._matrix.shape[1] != embed_mod.current_dim():
+            self._matrix = None
         if self._matrix is None:
             texts = [self._embed_text(e) for e in self.episodes]
             self._matrix = embed_mod.embed_texts(texts)

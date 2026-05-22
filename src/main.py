@@ -167,8 +167,13 @@ def _handle_command(agent: Agent, raw: str) -> bool:
         print(json.dumps(diff, ensure_ascii=False, indent=2))
         return True
     if head == "/reindex":
-        n = doc_rag.reindex()
-        print(f"reindexed: {n} chunks.")
+        summary = doc_rag.reindex()
+        print(
+            f"reindexed: {summary['chunks']} chunks from "
+            f"{summary['sources']} files."
+        )
+        if summary["skipped"]:
+            print(f"  skipped (no extractable text): {', '.join(summary['skipped'])}")
         return True
 
     if head.startswith("/"):

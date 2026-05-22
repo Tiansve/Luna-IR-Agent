@@ -45,6 +45,9 @@ class Agent:
         self.memory_tools = MemoryTools(
             self.episodic, self.insights, self.soul, self._save_soul
         )
+        # Build/load the docs index eagerly so the first user turn that
+        # triggers ``search_docs`` doesn't pay the full embedding cost.
+        doc_rag.ensure_index()
 
         self._dispatch: dict[str, Callable[..., Any]] = {
             "web_search": lambda **kw: web_search.web_search(**kw),

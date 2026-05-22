@@ -56,11 +56,14 @@ def main() -> None:
     print(f"[ok] embeddings shape={vecs.shape}, top2={top}")
 
     # --- doc_rag: build + search -------------------------------------------
-    n = doc_rag.reindex()
-    assert n > 0, "expected at least one doc chunk"
+    summary = doc_rag.reindex()
+    assert summary["chunks"] > 0, "expected at least one doc chunk"
     hit = doc_rag.search_docs("what is BM25?", k=2)
     assert "results" in hit and hit["results"], "search_docs returned no hits"
-    print(f"[ok] doc_rag: {n} chunks, top result source={hit['results'][0]['source']}")
+    print(
+        f"[ok] doc_rag: {summary['chunks']} chunks from {summary['sources']} files"
+        + (f", skipped {len(summary['skipped'])}" if summary["skipped"] else "")
+    )
 
     # --- Episodic store: add, search, mark reflected -----------------------
     eps = EpisodicStore(path=config.DATA_DIR / "_smoke_episodes.jsonl")

@@ -165,6 +165,8 @@ class InsightStore:
         ]
 
     def _ensure_matrix(self) -> np.ndarray:
+        if self._matrix is not None and self._matrix.shape[1] != embed_mod.current_dim():
+            self._matrix = None
         if self._matrix is None:
             texts = [ins.content for ins in self.insights]
             self._matrix = embed_mod.embed_texts(texts)

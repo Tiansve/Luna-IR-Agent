@@ -51,6 +51,13 @@ REFLECT_EVERY = _get_int("REFLECT_EVERY", 3)
 TOP_K_EPISODES = _get_int("TOP_K_EPISODES", 3)
 TOP_K_INSIGHTS = _get_int("TOP_K_INSIGHTS", 5)
 MAX_TOOL_ITERS = _get_int("MAX_TOOL_ITERS", 6)
+# Seconds before an LLM request is aborted. Keeps the REPL responsive when
+# the upstream provider stalls instead of returning an error.
+REQUEST_TIMEOUT = _get_int("REQUEST_TIMEOUT", 60)
+# Max characters returned by ``search_docs`` *per chunk* inside the tool
+# response payload. Long chunks bloat the next LLM turn for no benefit —
+# the agent only needs a useful excerpt, not the full passage.
+TOOL_CHUNK_EXCERPT_CHARS = _get_int("TOOL_CHUNK_EXCERPT_CHARS", 320)
 
 # Hashed-vector fallback dimensionality. Small enough to stay cheap, large
 # enough that random collisions don't dominate similarity.
